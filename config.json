@@ -1,0 +1,19 @@
+{
+  "ipc": {
+    "redis": "redis://127.0.0.1:6379",
+    "key_prefix": "bobaos",
+    "request_channel": "bobaos_req",
+    "broadcast_channel": "bobaos_bcast"
+  },
+  "sdk": {
+    "serialport": {
+      "device": "/dev/ttyS1",
+      "params": {
+        "baudRate": 19200,
+        "parity": "even",
+        "dataBits": 8,
+        "stopBits": 1
+      }
+    }
+  }
+}

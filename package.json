@@ -1,0 +1,22 @@
+{
+  "name": "bobaos.bq",
+  "version": "0.0.1",
+  "description": "Bobaos SDK over Redis and BeeQueue",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "knx",
+    "baos",
+    "bobaos"
+  ],
+  "author": "Vladimir Shabunin",
+  "license": "ISC",
+  "dependencies": {
+    "bee-queue": "^1.2.2",
+    "bobaos": "^2.0.10",
+    "knx-dpts-baos": "^1.0.0",
+    "redis": "^2.8.0"
+  }
+}
