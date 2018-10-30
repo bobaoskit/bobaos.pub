@@ -59,7 +59,6 @@ sdk.on("server item", async payload => {
 // JSON.stringify(Buffer) returns {type: Buffer, value: []}
 // but we want just array of bytes instead
 const _formatDatapointValue = payload => {
-  console.log("_format", payload);
   const _formatSingleValue = data => {
     // let rawBuff = Buffer.from(data.raw, "base64");
     // raw is base64 encoded
@@ -94,11 +93,11 @@ const initIPC = _ => {
   });
 
 // debugger
-  ipc.on("request", (req, res) => {
-    console.log(`Incoming request: `);
-    console.log(`method: ${req.method}`);
-    console.log(`payload: ${JSON.stringify(req.payload)}`);
-  });
+//   ipc.on("request", (req, res) => {
+//     console.log(`Incoming request: `);
+//     console.log(`method: ${req.method}`);
+//     console.log(`payload: ${JSON.stringify(req.payload)}`);
+//   });
 
   ipc.on("request", async (req, res) => {
     const processError = (e) => {
