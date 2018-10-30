@@ -5,10 +5,10 @@ const helloQ = new Queue(config.ipc.request_channel, {
   redis: config.ipc.redis
 });
 
-//setInterval(_ => {
+setInterval(_ => {
 
   const job = helloQ
-    .createJob({method: "get server item", payload: 10 })
+    .createJob({method: "get value", payload: 1 })
     .save()
     .then(_ => {
       console.log(`job is queued with id ${_.id}`);
@@ -16,7 +16,7 @@ const helloQ = new Queue(config.ipc.request_channel, {
     .catch(e => {
       console.log(`job failed ${e}`);
     });
-//}, 3000);
+}, 50);
 
 helloQ.on("job succeeded", (jobId, result) => {
   console.log(`Job ${jobId} succeeded with result: ${JSON.stringify(result)}`);
