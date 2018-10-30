@@ -8,7 +8,7 @@ const helloQ = new Queue(config.ipc.request_channel, {
 //setInterval(_ => {
 
   const job = helloQ
-    .createJob({method: "get server item", payload: [1, 2, 3, 4, 5, 11] })
+    .createJob({method: "get parameter byte", payload: 5 })
     .save()
     .then(_ => {
       console.log(`job is queued with id ${_.id}`);

@@ -61,11 +61,12 @@ sdk.on("server item", async payload => {
 const _formatDatapointValue = payload => {
   console.log("_format", payload);
   const _formatSingleValue = data => {
-    let rawBuff = Buffer.from(data.raw, "base64");
+    // let rawBuff = Buffer.from(data.raw, "base64");
+    // raw is base64 encoded
     return {
       id: data.id,
       value: data.value,
-      raw: Array.prototype.slice.call(rawBuff)
+      raw: data.raw
     };
   };
   if (Array.isArray(payload)) {
@@ -201,7 +202,7 @@ const initIPC = _ => {
     }
     if (req.method === "get programming mode") {
       try {
-        let result = (await sdk.getServerItem("ProgrammingMode")).value;
+        let result = await sdk.getProgrammingMode();
         res.method = "success";
         res.payload = result;
         return res.send();
