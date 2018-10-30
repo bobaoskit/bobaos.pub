@@ -20,10 +20,9 @@ let onSdkReady = async _ => {
 
   sdkReady = true;
   if (ipcReady) {
-    await ipc.broadcast({ method: "sdk state", payload: "ready" });
+    await ipc.broadcast({method: "sdk state", payload: "ready"});
   } else {
     initIPC();
-    setTimeout(onSdkReady, 5000);
   }
 };
 sdk.on("ready", async _ => {
@@ -34,7 +33,7 @@ sdk.on("ready", async _ => {
 let onSdkStop = async _ => {
   sdkReady = false;
   if (ipcReady) {
-    await ipc.broadcast({ method: "sdk state", payload: "stop" });
+    await ipc.broadcast({method: "sdk state", payload: "stop"});
   } else {
     setTimeout(onSdkStop, 5000);
   }
@@ -46,13 +45,13 @@ sdk.on("stop", async _ => {
 
 sdk.on("datapoint value", async payload => {
   if (ipcReady) {
-    await ipc.broadcast({ method: "datapoint value", payload: _formatDatapointValue(payload) });
+    await ipc.broadcast({method: "datapoint value", payload: _formatDatapointValue(payload)});
   }
 });
 
 sdk.on("server item", async payload => {
   if (ipcReady) {
-    await ipc.broadcast({ method: "server item", payload: payload });
+    await ipc.broadcast({method: "server item", payload: payload});
   }
 });
 
@@ -60,11 +59,13 @@ sdk.on("server item", async payload => {
 // JSON.stringify(Buffer) returns {type: Buffer, value: []}
 // but we want just array of bytes instead
 const _formatDatapointValue = payload => {
+  console.log("_format", payload);
   const _formatSingleValue = data => {
+    let rawBuff = Buffer.from(data.raw, "base64");
     return {
-      id: (data.id),
-      value: (data.value),
-      raw: Array.prototype.slice.call(data.raw)
+      id: data.id,
+      value: data.value,
+      raw: Array.prototype.slice.call(rawBuff)
     };
   };
   if (Array.isArray(payload)) {
@@ -74,171 +75,152 @@ const _formatDatapointValue = payload => {
   return _formatSingleValue(payload);
 };
 const initIPC = _ => {
-ipc = IPC();
-ipcReady = false;
-ipc.setMaxListeners(0);
-
-ipc.on("ready", _ => {
-  console.log("IPC ready");
-  ipcReady = true;
-});
-
-ipc.on("error", e => {
-  console.log(`Error with ipc: ${e.message}`);
+  ipc = IPC();
   ipcReady = false;
-});
+  ipc.setMaxListeners(0);
+
+  ipc.on("ready", async _ => {
+    console.log("IPC ready");
+    ipcReady = true;
+    if (sdkReady) {
+      await ipc.broadcast({method: "sdk state", payload: "ready"});
+    }
+  });
+
+  ipc.on("error", e => {
+    console.log(`Error with ipc: ${e.message}`);
+    ipcReady = false;
+  });
 
 // debugger
-ipc.on("request", (req, res) => {
-  console.log(`Incoming request: `);
-  console.log(`method: ${req.method}`);
-  console.log(`payload: ${JSON.stringify(req.payload)}`);
-});
+  ipc.on("request", (req, res) => {
+    console.log(`Incoming request: `);
+    console.log(`method: ${req.method}`);
+    console.log(`payload: ${JSON.stringify(req.payload)}`);
+  });
 
-// ping
-ipc.on("request", (req, res) => {
-  if (req.method === "ping") {
-    res.method = "success";
-    res.payload = true;
-    res.send();
-  }
-});
+  ipc.on("request", async (req, res) => {
+    const processError = (e) => {
+      res.method = "error";
+      res.payload = e.message;
+      console.log(e);
+      return res.send();
+    };
 
-ipc.on("request", (req, res) => {
-  if (req.method === "get sdk state") {
-    res.method = "success";
-    res.payload = sdkReady ? "ready" : "stop";
-    res.send();
-  }
-});
+    if (req.method === "ping") {
+      res.method = "success";
+      res.payload = true;
+      return res.send();
+    }
+    if (req.method === "get sdk state") {
+      res.method = "success";
+      res.payload = sdkReady ? "ready" : "stop";
+      return res.send();
+    }
+    if (req.method === "reset") {
+      try {
+        await sdk.reset();
+        res.method = "success";
+        res.payload = null;
+        return res.send();
+      } catch (e) {
+        return processError(e);
+      }
+    }
+    if (req.method === "get description") {
+      try {
+        let result = await sdk.getDescription(req.payload);
+        res.method = "success";
+        res.payload = result;
+        return res.send();
+      } catch (e) {
+        return processError(e);
+      }
+    }
+    if (req.method === "get value") {
+      try {
+        let result = await sdk.getValue(req.payload);
+        res.method = "success";
+        res.payload = _formatDatapointValue(result);
+        return res.send();
+      } catch (e) {
+        return processError(e);
+      }
+    }
+    if (req.method === "get stored value") {
+      try {
+        let result = await sdk.getStoredValue(req.payload);
+        res.method = "success";
+        res.payload = _formatDatapointValue(result);
+        return res.send();
+      } catch (e) {
+        return processError(e);
+      }
+    }
+    if (req.method === "set value") {
+      try {
+        let result = await sdk.setValue(req.payload);
+        res.method = "success";
+        res.payload = _formatDatapointValue(result);
+        ipc.broadcast({method: "datapoint value", payload: _formatDatapointValue(result)});
+        return res.send();
+        // TODO: broadcast changed values
+      } catch (e) {
+        return processError(e);
+      }
+    }
+    if (req.method === "read value") {
+      try {
+        let result = await sdk.readValue(req.payload);
+        res.method = "success";
+        res.payload = result;
+        return res.send();
+      } catch (e) {
+        return processError(e);
+      }
+    }
+    if (req.method === "get server item") {
+      try {
+        let result = await sdk.getServerItem(req.payload);
+        res.method = "success";
+        res.payload = result;
+        return res.send();
+      } catch (e) {
+        return processError(e);
+      }
+    }
+    if (req.method === "set programming mode") {
+      try {
+        let result = await sdk.setProgrammingMode(req.payload);
+        res.method = "success";
+        res.payload = result;
+        return res.send();
+      } catch (e) {
+        return processError(e);
+      }
+    }
+    if (req.method === "get programming mode") {
+      try {
+        let result = (await sdk.getServerItem("ProgrammingMode")).value;
+        res.method = "success";
+        res.payload = result;
+        return res.send();
+      } catch (e) {
+        return processError(e);
+      }
+    }
+    if (req.method === "get parameter byte") {
+      try {
+        let result = await sdk.getParameterByte(req.payload);
+        res.method = "success";
+        res.payload = result;
+        return res.send();
+      } catch (e) {
+        return processError(e);
+      }
+    }
 
-ipc.on("request", async (req, res) => {
-  if (req.method === "reset") {
-    try {
-      await sdk.reset();
-      res.method = "success";
-      res.payload = null;
-      res.send();
-    } catch (e) {
-      res.method = "error";
-      res.payload = e.message;
-      res.send();
-    }
-  }
-});
-
-
-ipc.on("request", async (req, res) => {
-  if (req.method === "get description") {
-    try {
-      let result = await sdk.getDescription(req.payload);
-      res.method = "success";
-      res.payload = result;
-      res.send();
-    } catch (e) {
-      res.method = "error";
-      res.payload = e.message;
-      res.send();
-    }
-  }
-  if (req.method === "get value") {
-    try {
-      let result = await sdk.getValue(req.payload);
-      res.method = "success";
-      res.payload = _formatDatapointValue(result);
-      res.send();
-    } catch (e) {
-      res.method = "error";
-      res.payload = e.message;
-      res.send();
-    }
-  }
-  if (req.method === "get stored value") {
-    try {
-      let result = await sdk.getStoredValue(req.payload);
-      res.method = "success";
-      res.payload = _formatDatapointValue(result);
-      res.send();
-    } catch (e) {
-      res.method = "error";
-      res.payload = e.message;
-      res.send();
-    }
-  }
-  if (req.method === "set value") {
-    try {
-      let result = await sdk.setValue(req.payload);
-      res.method = "success";
-      res.payload = _formatDatapointValue(result);
-      res.send();
-      // TODO: broadcast changed values
-      ipc.broadcast({ method: "datapoint value", payload: _formatDatapointValue(result) });
-    } catch (e) {
-      res.method = "error";
-      res.payload = e.message;
-      res.send();
-    }
-  }
-  if (req.method === "read value") {
-    try {
-      let result = await sdk.readValue(req.payload);
-      res.method = "success";
-      res.payload = result;
-      res.send();
-    } catch (e) {
-      res.method = "error";
-      res.payload = e.message;
-      res.send();
-    }
-  }
-  if (req.method === "get server item") {
-    try {
-      let result = await sdk.getServerItem(req.payload);
-      res.method = "success";
-      res.payload = result;
-      res.send();
-    } catch (e) {
-      res.method = "error";
-      res.payload = e.message;
-      res.send();
-    }
-  }
-  if (req.method === "set programming mode") {
-    try {
-      let result = await sdk.setProgrammingMode(req.payload);
-      res.method = "success";
-      res.payload = result;
-      res.send();
-    } catch (e) {
-      res.method = "error";
-      res.payload = e.message;
-      res.send();
-    }
-  }
-  if (req.method === "get programming mode") {
-    try {
-      let result = (await sdk.getServerItem("ProgrammingMode")).value;
-      res.method = "success";
-      res.payload = result;
-      res.send();
-    } catch (e) {
-      res.method = "error";
-      res.payload = e.message;
-      res.send();
-    }
-  }
-  if (req.method === "get parameter byte") {
-    try {
-      let result = await sdk.getParameterByte(req.payload);
-      res.method = "success";
-      res.payload = result;
-      res.send();
-    } catch (e) {
-      res.method = "error";
-      res.payload = e.message;
-      res.send();
-    }
-  }
-});
+    return processError(new Error("Unknown method"));
+  });
 
 };

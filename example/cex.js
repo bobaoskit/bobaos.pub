@@ -1,15 +1,14 @@
 const Queue = require("bee-queue");
 const config = require("../config.json");
 
-const socketFile = "/var/run/redis/redis.sock";
-
 const helloQ = new Queue(config.ipc.request_channel, {
   redis: config.ipc.redis
 });
 
-setInterval(_ => {
+//setInterval(_ => {
+
   const job = helloQ
-    .createJob({method: "get value", payload:[101, 1] })
+    .createJob({method: "get server item", payload: [1, 2, 3, 4, 5, 11] })
     .save()
     .then(_ => {
       console.log(`job is queued with id ${_.id}`);
@@ -17,7 +16,7 @@ setInterval(_ => {
     .catch(e => {
       console.log(`job failed ${e}`);
     });
-}, 3000);
+//}, 3000);
 
 helloQ.on("job succeeded", (jobId, result) => {
   console.log(`Job ${jobId} succeeded with result: ${JSON.stringify(result)}`);
