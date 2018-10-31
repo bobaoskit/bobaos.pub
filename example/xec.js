@@ -135,7 +135,7 @@ const init = async _ => {
   // console.log("get description: ", await my.getDescription(1));
   // console.log("get value: ", await my.getValue(1));
   // console.log("get stored: ", await my.getStoredValue(101));
-  // console.log("set value: ", await my.setValue([{id: 101, value: 1}, {id: 102, value: 0}]));
+  console.log("set value: ", await my.setValue([{id: 101, value: 0}, {id: 102, value: 0}, {id: 103, value: 0}]));
   // console.log("read value: ", await my.readValue(1));
   // console.log("get server item: ", await my.getServerItem(1));
   // console.log("set programming mode: ", await my.setProgrammingMode(true));
@@ -144,7 +144,7 @@ const init = async _ => {
   setInterval(async _ => {
     console.log(await my.readValue([1, 105, 106, 107]));
     console.log(await my.getValue([1, 105, 106, 107]));
-  }, 300)
+  }, 1000)
 };
 
 init();
