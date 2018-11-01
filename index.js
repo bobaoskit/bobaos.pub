@@ -20,7 +20,7 @@ let onSdkReady = async _ => {
 
   sdkReady = true;
   if (ipcReady) {
-    await ipc.broadcast({method: "sdk state", payload: "ready"});
+    await ipc.broadcast({ method: "sdk state", payload: "ready" });
   } else {
     initIPC();
   }
@@ -33,7 +33,7 @@ sdk.on("ready", async _ => {
 let onSdkStop = async _ => {
   sdkReady = false;
   if (ipcReady) {
-    await ipc.broadcast({method: "sdk state", payload: "stop"});
+    await ipc.broadcast({ method: "sdk state", payload: "stop" });
   } else {
     setTimeout(onSdkStop, 5000);
   }
@@ -45,13 +45,13 @@ sdk.on("stop", async _ => {
 
 sdk.on("datapoint value", async payload => {
   if (ipcReady) {
-    await ipc.broadcast({method: "datapoint value", payload: _formatDatapointValue(payload)});
+    await ipc.broadcast({ method: "datapoint value", payload: _formatDatapointValue(payload) });
   }
 });
 
 sdk.on("server item", async payload => {
   if (ipcReady) {
-    await ipc.broadcast({method: "server item", payload: payload});
+    await ipc.broadcast({ method: "server item", payload: payload });
   }
 });
 
@@ -83,7 +83,7 @@ const initIPC = _ => {
     console.log("IPC ready");
     ipcReady = true;
     if (sdkReady) {
-      await ipc.broadcast({method: "sdk state", payload: "ready"});
+      await ipc.broadcast({ method: "sdk state", payload: "ready" });
     }
   });
 
@@ -92,15 +92,15 @@ const initIPC = _ => {
     ipcReady = false;
   });
 
-// debugger
-//   ipc.on("request", (req, res) => {
-//     console.log(`Incoming request: `);
-//     console.log(`method: ${req.method}`);
-//     console.log(`payload: ${JSON.stringify(req.payload)}`);
-//   });
+  // debugger
+  //   ipc.on("request", (req, res) => {
+  //     console.log(`Incoming request: `);
+  //     console.log(`method: ${req.method}`);
+  //     console.log(`payload: ${JSON.stringify(req.payload)}`);
+  //   });
 
   ipc.on("request", async (req, res) => {
-    const processError = (e) => {
+    const processError = e => {
       res.method = "error";
       res.payload = e.message;
       console.log(e);
@@ -162,7 +162,7 @@ const initIPC = _ => {
         let result = await sdk.setValue(req.payload);
         res.method = "success";
         res.payload = _formatDatapointValue(result);
-        ipc.broadcast({method: "datapoint value", payload: _formatDatapointValue(result)});
+        ipc.broadcast({ method: "datapoint value", payload: _formatDatapointValue(result) });
         return res.send();
         // TODO: broadcast changed values
       } catch (e) {
@@ -222,5 +222,4 @@ const initIPC = _ => {
 
     return processError(new Error("Unknown method"));
   });
-
 };
