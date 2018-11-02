@@ -7,7 +7,8 @@ const config = require("./config");
 
 let start, end;
 start = new Date();
-console.log("Starting bobaos.pub. Started: ", start);
+console.log(start);
+console.log("Starting bobaos.pub.");
 
 let ipc;
 let ipcReady = false;
@@ -227,7 +228,9 @@ const initIPC = _ => {
 
     if (req.method === "poll values") {
       try {
+        console.log("poll values start");
         let result = await sdk.pollValues();
+        console.log("poll valuess success");
         res.method = "success";
         res.payload = result;
         return res.send();

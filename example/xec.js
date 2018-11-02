@@ -147,93 +147,94 @@ const init = async _ => {
   console.log("end", end);
   console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>");
 
-  start = new Date();
-  console.log(
-    "get values",
-    await my.getValue([
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10,
-      11,
-      12,
-      13,
-      14,
-      15,
-      16,
-      17,
-      18,
-      19,
-      20,
-      101,
-      102,
-      103,
-      104,
-      105,
-      106,
-      107,
-      500,
-      501,
-      502,
-      505,
-      507,
-      990,
-      1000
-    ])
-  );
-  end = new Date();
-  console.log("new algo time diff: ", end - start);
-  console.log("start", start);
-  console.log("end", end);
-  console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>");
+  // start = new Date();
+  // console.log(
+  //   "get values",
+  //   await my.getValue([
+  //     1,
+  //     2,
+  //     3,
+  //     4,
+  //     5,
+  //     6,
+  //     7,
+  //     8,
+  //     9,
+  //     10,
+  //     11,
+  //     12,
+  //     13,
+  //     14,
+  //     15,
+  //     16,
+  //     17,
+  //     18,
+  //     19,
+  //     20,
+  //     101,
+  //     102,
+  //     103,
+  //     104,
+  //     105,
+  //     106,
+  //     107,
+  //     500,
+  //     501,
+  //     502,
+  //     505,
+  //     507,
+  //     990,
+  //     1000
+  //   ])
+  // );
+  // end = new Date();
+  // console.log("new algo time diff: ", end - start);
+  // console.log("start", start);
+  // console.log("end", end);
+  // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>");
+  //
+  // start = new Date();
+  // console.log("get values");
+  // console.log(await my.getValue(1));
+  // console.log(await my.getValue(2));
+  // console.log(await my.getValue(3));
+  // console.log(await my.getValue(4));
+  // console.log(await my.getValue(5));
+  // console.log(await my.getValue(6));
+  // console.log(await my.getValue(7));
+  // console.log(await my.getValue(8));
+  // console.log(await my.getValue(9));
+  // console.log(await my.getValue(10));
+  // console.log(await my.getValue(11));
+  // console.log(await my.getValue(12));
+  // console.log(await my.getValue(13));
+  // console.log(await my.getValue(14));
+  // console.log(await my.getValue(15));
+  // console.log(await my.getValue(16));
+  // console.log(await my.getValue(17));
+  // console.log(await my.getValue(18));
+  // console.log(await my.getValue(19));
+  // console.log(await my.getValue(20));
+  // console.log(await my.getValue(101));
+  // console.log(await my.getValue(102));
+  // console.log(await my.getValue(103));
+  // console.log(await my.getValue(104));
+  // console.log(await my.getValue(105));
+  // console.log(await my.getValue(106));
+  // console.log(await my.getValue(107));
+  // console.log(await my.getValue(500));
+  // console.log(await my.getValue(501));
+  // console.log(await my.getValue(502));
+  // console.log(await my.getValue(505));
+  // console.log(await my.getValue(507));
+  // console.log(await my.getValue(990));
+  // console.log(await my.getValue(1000));
+  // end = new Date();
+  // console.log("multiple reqs time diff: ", end - start);
+  // console.log("start", start);
+  // console.log("end", end);
+  // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>");
 
-  start = new Date();
-  console.log("get values");
-  console.log(await my.getValue(1));
-  console.log(await my.getValue(2));
-  console.log(await my.getValue(3));
-  console.log(await my.getValue(4));
-  console.log(await my.getValue(5));
-  console.log(await my.getValue(6));
-  console.log(await my.getValue(7));
-  console.log(await my.getValue(8));
-  console.log(await my.getValue(9));
-  console.log(await my.getValue(10));
-  console.log(await my.getValue(11));
-  console.log(await my.getValue(12));
-  console.log(await my.getValue(13));
-  console.log(await my.getValue(14));
-  console.log(await my.getValue(15));
-  console.log(await my.getValue(16));
-  console.log(await my.getValue(17));
-  console.log(await my.getValue(18));
-  console.log(await my.getValue(19));
-  console.log(await my.getValue(20));
-  console.log(await my.getValue(101));
-  console.log(await my.getValue(102));
-  console.log(await my.getValue(103));
-  console.log(await my.getValue(104));
-  console.log(await my.getValue(105));
-  console.log(await my.getValue(106));
-  console.log(await my.getValue(107));
-  console.log(await my.getValue(500));
-  console.log(await my.getValue(501));
-  console.log(await my.getValue(502));
-  console.log(await my.getValue(505));
-  console.log(await my.getValue(507));
-  console.log(await my.getValue(990));
-  console.log(await my.getValue(1000));
-  end = new Date();
-  console.log("multiple reqs time diff: ", end - start);
-  console.log("start", start);
-  console.log("end", end);
-  console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>");
   // console.log("read value: ", await my.readValue(1));
   // console.log("read value: ", await my.readValue(1));
   // console.log("get server item: ", await my.getServerItem(1));
