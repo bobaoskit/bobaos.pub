@@ -5,7 +5,9 @@ const config = require("./config");
 
 // init logger
 
-console.log("Starting bobaos.pub");
+let start, end;
+start = new Date();
+console.log("Starting bobaos.pub. Started: ", start);
 
 let ipc;
 let ipcReady = false;
@@ -80,8 +82,11 @@ const initIPC = _ => {
   ipc.setMaxListeners(0);
 
   ipc.on("ready", async _ => {
+    end = new Date();
     console.log("IPC ready");
+    console.log(`Ready to use. Started in: ${end - start}ms`);
     ipcReady = true;
+
     if (sdkReady) {
       await ipc.broadcast({ method: "sdk state", payload: "ready" });
     }
