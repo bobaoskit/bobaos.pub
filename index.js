@@ -228,9 +228,7 @@ const initIPC = _ => {
 
     if (req.method === "poll values") {
       try {
-        console.log("poll values start");
         let result = await sdk.pollValues();
-        console.log("poll valuess success");
         res.method = "success";
         res.payload = result;
         return res.send();
