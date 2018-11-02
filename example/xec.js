@@ -12,11 +12,10 @@ let BobaosBQ = params => {
 
   let self = new EE();
   Object.assign(_params, params);
-  const jqueue = new Queue(_params.request_channel,
-    {
-      redis: _params.redis,
-      isWorker: false
-    });
+  const jqueue = new Queue(_params.request_channel, {
+    redis: _params.redis,
+    isWorker: false
+  });
 
   let jobs = [];
 
@@ -26,7 +25,7 @@ let BobaosBQ = params => {
     let found = jobs.findIndex(findById);
     if (found > -1) {
       // TODO: resolve/reject
-      let {method, payload} = result;
+      let { method, payload } = result;
       if (method === "success") {
         jobs[found].callback(null, payload);
       }
@@ -40,16 +39,15 @@ let BobaosBQ = params => {
   // Never used?
   jqueue.on("job failed", (id, result) => {
     console.log(`Job ${id} failed with result: ${result}`);
-
   });
 
   self.commonRequest = (method, payload) => {
     return new Promise((resolve, reject) => {
       jqueue
-        .createJob({method: method, payload: payload})
+        .createJob({ method: method, payload: payload })
         .save()
         .then(job => {
-          let {id} = job;
+          let { id } = job;
           let callback = (err, result) => {
             if (err) {
               return reject(err);
@@ -57,7 +55,7 @@ let BobaosBQ = params => {
 
             resolve(result);
           };
-          jobs.push({id: id, callback: callback});
+          jobs.push({ id: id, callback: callback });
         })
         .catch(e => {
           reject(e);
@@ -104,19 +102,22 @@ let BobaosBQ = params => {
   self.getParameterByte = payload => {
     return self.commonRequest("get parameter byte", payload);
   };
+  self.pollValues = _ => {
+    return self.commonRequest("poll values", null);
+  };
 
   // now events
   const redisSub = Redis.createClient(_params.redis);
-  redisSub.on("message", function (channel, message) {
+  redisSub.on("message", function(channel, message) {
     try {
-      let {method, payload} = JSON.parse(message);
+      let { method, payload } = JSON.parse(message);
       if (method === "datapoint value") {
         return self.emit("datapoint value", payload);
       }
       if (method === "server item") {
         return self.emit("server item", payload);
       }
-    } catch(e) {
+    } catch (e) {
       console.log(`Error processing broadcast message: ${e.message}`);
     }
   });
@@ -129,22 +130,60 @@ const my = BobaosBQ();
 // my.on("datapoint value", console.log);
 // my.on("server item", console.log);
 const init = async _ => {
-  console.log("ping: ", await my.ping());
-  console.log("state: ", await my.getSdkState());
+  // console.log("ping: ", await my.ping());
+  // console.log("state: ", await my.getSdkState());
   // console.log("reset: ", await my.reset());
   // console.log("get description: ", await my.getDescription(1));
   // console.log("get value: ", await my.getValue(1));
   // console.log("get stored: ", await my.getStoredValue(101));
-  console.log("set value: ", await my.setValue([{id: 101, value: 0}, {id: 102, value: 0}, {id: 103, value: 0}]));
+  // console.log("set value: ", await my.setValue([{ id: 101, value: 1 }, { id: 102, value: 1 }, { id: 103, value: 1 }]));
+  let start, end;
+
+  start = new Date();
+  console.log("poll", await my.pollValues());
+  end = new Date();
+  console.log("poll time diff: ", end - start);
+  console.log("start", start);
+  console.log("end", end);
+  console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+  start = new Date();
+  console.log("get values", await my.getValue([1, 2, 3, 101, 102, 500, 501, 502, 505, 507, 990, 1000]));
+  end = new Date();
+  console.log("new algo time diff: ", end - start);
+  console.log("start", start);
+  console.log("end", end);
+  console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+  start = new Date();
+  console.log("get values");
+  console.log(await my.getValue(1));
+  console.log(await my.getValue(2));
+  console.log(await my.getValue(3));
+  console.log(await my.getValue(101));
+  console.log(await my.getValue(102));
+  console.log(await my.getValue(500));
+  console.log(await my.getValue(501));
+  console.log(await my.getValue(502));
+  console.log(await my.getValue(505));
+  console.log(await my.getValue(507));
+  console.log(await my.getValue(990));
+  console.log(await my.getValue(1000));
+  end = new Date();
+  console.log("multiple reqs time diff: ", end - start);
+  console.log("start", start);
+  console.log("end", end);
+  console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>");
+  // console.log("read value: ", await my.readValue(1));
   // console.log("read value: ", await my.readValue(1));
   // console.log("get server item: ", await my.getServerItem(1));
   // console.log("set programming mode: ", await my.setProgrammingMode(true));
   // console.log("get programming mode: ", await my.getProgrammingMode());
   // console.log("get parameter byte: ", await my.getParameterByte(1));
-  setInterval(async _ => {
-    console.log(await my.readValue([1, 105, 106, 107]));
-    console.log(await my.getValue([1, 105, 106, 107]));
-  }, 1000)
+  // setInterval(async _ => {
+  //   console.log(await my.readValue([1, 105, 106, 107]));
+  //   console.log(await my.getValue([1, 105, 106, 107]));
+  // }, 1000)
 };
 
 init();

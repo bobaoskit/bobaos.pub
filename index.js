@@ -220,6 +220,17 @@ const initIPC = _ => {
       }
     }
 
+    if (req.method === "poll values") {
+      try {
+        let result = await sdk.pollValues();
+        res.method = "success";
+        res.payload = result;
+        return res.send();
+      } catch (e) {
+        return processError(e);
+      }
+    }
+
     return processError(new Error("Unknown method"));
   });
 };
