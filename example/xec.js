@@ -243,7 +243,10 @@ const init = async _ => {
   console.log("stored value: ", await my.getStoredValue([1, 2, 3, 4, 10]));
 
   console.log("get description", await my.getDescription([1, 101, 105]));
-  console.log("get description", await my.getDescription("hello, friend"));
+  console.log("get server item", await my.getServerItem(1));
+  console.log("get server item", await my.getServerItem([1, 10, 15]));
+  // console.log("get server item", await my.getServerItem([1, "hello, friend"]));
+  console.log("set value", await my.setValue(1422));
   // console.log("get server item: ", await my.getServerItem(1));
   // console.log("set programming mode: ", await my.setProgrammingMode(true));
   // console.log("get programming mode: ", await my.getProgrammingMode());
