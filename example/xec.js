@@ -127,7 +127,7 @@ let BobaosBQ = params => {
 };
 
 const my = BobaosBQ();
-// my.on("datapoint value", console.log);
+my.on("datapoint value", console.log);
 // my.on("server item", console.log);
 const init = async _ => {
   // console.log("ping: ", await my.ping());
@@ -140,7 +140,7 @@ const init = async _ => {
   let start, end;
 
   start = new Date();
-  console.log("poll", await my.pollValues());
+  // console.log("poll", await my.pollValues());
   end = new Date();
   console.log("poll time diff: ", end - start);
   console.log("start", start);
@@ -229,14 +229,15 @@ const init = async _ => {
   console.log(await my.getValue(507));
   console.log(await my.getValue(990));
   console.log(await my.getValue(1000));
+  console.log(await my.getValue(1000));
   end = new Date();
   console.log("multiple reqs time diff: ", end - start);
   console.log("start", start);
   console.log("end", end);
   console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>");
 
-  // console.log("read value: ", await my.readValue(1));
-  // console.log("read value: ", await my.readValue(1));
+  console.log("read value: ", await my.readValue(1));
+  console.log("read value: ", await my.readValue([1, 107, 105, 106]));
   // console.log("get server item: ", await my.getServerItem(1));
   // console.log("set programming mode: ", await my.setProgrammingMode(true));
   // console.log("get programming mode: ", await my.getProgrammingMode());
