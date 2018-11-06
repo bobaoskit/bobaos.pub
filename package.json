@@ -4,7 +4,7 @@
   "description": "Bobaos SDK over Redis and BeeQueue",
   "main": "index.js",
   "bin": {
-    "bobaos.pub": "./bin/bobaos-pub.js"
+    "bobaos-pub": "./bin/bobaos-pub.js"
   },
   "repository":{
     "type": "git",
