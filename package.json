@@ -6,7 +6,7 @@
   "bin": {
     "bobaos-pub": "./bin/bobaos-pub.js"
   },
-  "repository":{
+  "repository": {
     "type": "git",
     "url": "https://github.com/bobaoskit/bobaos.pub"
   },
