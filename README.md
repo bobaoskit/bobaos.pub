@@ -1,13 +1,8 @@
 # bobaos.pub
 
-Hello again, friend.
+Hello, friend.
 
-
-It's been a long time since bobaos hasn't updated.
-So, it isn't updated this time.
-The last version still is old stable 2.0.9.
-
-This module is a update for bdsd.sock. 
+This module is an update for bdsd.sock. 
 
 ## Improvements: 
 

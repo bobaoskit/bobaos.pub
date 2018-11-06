@@ -1,8 +1,15 @@
 {
-  "name": "bobaos.bq",
-  "version": "0.0.1",
+  "name": "bobaos.pub",
+  "version": "2.0.0",
   "description": "Bobaos SDK over Redis and BeeQueue",
   "main": "index.js",
+  "bin": {
+    "bobaos.pub": "./bin/bobaos-pub.js"
+  },
+  "repository":{
+    "type": "git",
+    "url": "https://github.com/bobaoskit/bobaos.sub"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
