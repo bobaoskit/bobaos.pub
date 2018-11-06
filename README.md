@@ -15,7 +15,7 @@ This module is an update for bdsd.sock.
 
 ## Architecture
 
-Bobaos.Pub uses redis and [bee-queue](https://www.npmjs.com/package/bee-queue) to accepts requests.
+Bobaos.Pub uses [redis](https://redis.io/) and [bee-queue](https://www.npmjs.com/package/bee-queue) to accepts requests.
 
 1. It creates queue with name defined `config.json/ipc.request_channel`, by default it is `bobaos_req`.
 2. It broadcasts events like `datapoint value`, `server item`, `sdk status` over channel defined in `config.json`, by default it is `bobaos_bcast`.
