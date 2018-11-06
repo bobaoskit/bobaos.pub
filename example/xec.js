@@ -37,7 +37,7 @@ let BobaosBQ = params => {
         }
         jobs.splice(found, 1);
       }
-    }, 10);
+    }, 1);
   });
 
   // Never used?
@@ -251,7 +251,7 @@ const init = async _ => {
   console.log("get server item", await my.getServerItem(1));
   console.log("get server item", await my.getServerItem([1, 10, 15]));
   // console.log("get server item", await my.getServerItem([1, "hello, friend"]));
-  console.log("set value", await my.setValue([{ id: 101, value: 0 }, { id: 102, value: 1 }]));
+  console.log("set value", await my.setValue([{ id: 101, value: 1 }, { id: 103, value: 1 }]));
   console.log("get server item: ", await my.getServerItem(1));
   console.log("set programming mode: ", await my.setProgrammingMode(false));
   console.log("get programming mode: ", await my.getProgrammingMode());
@@ -272,7 +272,7 @@ const init = async _ => {
     // console.log(await my.readValue([1, 105, 106, 107]));
     // console.log(await my.getValue([1, 105, 106, 107]));
     console.log(
-      await my.getValue([
+      await my.getStoredValue([
         1,
         2,
         3,
@@ -323,6 +323,7 @@ const init = async _ => {
     await sleep(1);
     end = new Date();
     console.log(`>>> time diff: ${end - start}ms`);
+    console.log(new Date().toTimeString());
     await loop();
   };
 
