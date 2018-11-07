@@ -22,12 +22,10 @@ let BobaosBQ = params => {
     // hack: sometimes this event is fired before job.save.then
     // so, set timeout to be sure that job save then was called
     setTimeout(_ => {
-      // TODO: try to find job in jobs
       console.log(`job has been succeeded ${id}`);
       const findById = t => t.id === id;
       let found = jobs.findIndex(findById);
       if (found > -1) {
-        // TODO: resolve/reject
         let { method, payload } = result;
         if (method === "success") {
           jobs[found].callback(null, payload);

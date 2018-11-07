@@ -13,8 +13,6 @@ console.log("Starting bobaos.pub.");
 let ipc;
 let ipcReady = false;
 
-// TODO: params => { self = new EE(); return self; }
-
 let sdk = BobaosSdk();
 let sdkReady = false;
 
@@ -170,7 +168,6 @@ const initIPC = _ => {
         res.payload = _formatDatapointValue(result);
         ipc.broadcast({ method: "datapoint value", payload: _formatDatapointValue(result) });
         return res.send();
-        // TODO: broadcast changed values
       } catch (e) {
         return processError(e);
       }
