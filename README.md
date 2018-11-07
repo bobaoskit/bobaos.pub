@@ -23,6 +23,13 @@ Bobaos.Pub uses [redis](https://redis.io/) and [bee-queue](https://www.npmjs.com
 ## Installation
 
 1. Install redis, enable and start service. If needed, apply your settings.
+
+```text
+sudo apt install redis-server
+sudo systemctl daemon-reload
+sudo systemctl start redis.service
+```
+
 2. Install bobaos.pub package.
 
 ```
@@ -34,6 +41,7 @@ sudo npm i -g bobaos.pub --unsafe-perm
 ```
 [Unit]
 Description=PubSub service running on nodejs
+After=redis.service
 
 [Service]
 User=pi
@@ -53,9 +61,18 @@ sudo systemctl enable bobaos_pub.service
 sudo systemctl start bobaos_pub.service
 ```
 
+5. Test it with bobaos.tool
+
+```text
+$ sudo npm i -g bobaos.tool
+$ bobaos-tool
+bobaos> ping
+ping: true
+```
+
 ## Protocol
 
-First, job is sent to `config.ipc.request_channel` with data object, consist following fields:
+First, Bee-Queue job is sent to `config.ipc.request_channel` with data object, consist following fields:
 
 * `method` is an API method.
 * `payload` depends on method. It may be datapoint id, array of ids, value, or null.
