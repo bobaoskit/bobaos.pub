@@ -23,7 +23,7 @@ let onSdkReady = async _ => {
   if (ipcReady) {
     await ipc.broadcast({ method: "sdk state", payload: "ready" });
   } else {
-    initIPC();
+    await initIPC();
   }
 };
 sdk.on("ready", async _ => {
@@ -75,165 +75,169 @@ const _formatDatapointValue = payload => {
 
   return _formatSingleValue(payload);
 };
+
 const initIPC = _ => {
-  ipc = IPC();
-  ipcReady = false;
-  ipc.setMaxListeners(0);
-
-  ipc.on("ready", async _ => {
-    end = new Date();
-    console.log("IPC ready");
-    console.log(`Ready to use. Started in: ${end - start}ms`);
-    ipcReady = true;
-
-    if (sdkReady) {
-      await ipc.broadcast({ method: "sdk state", payload: "ready" });
-    }
-  });
-
-  ipc.on("error", e => {
-    console.log(`Error with ipc: ${e.message}`);
+  return new Promise((resolve, reject) => {
+    ipc = IPC();
     ipcReady = false;
-  });
+    ipc.setMaxListeners(0);
 
-  // debugger
-  //   ipc.on("request", (req, res) => {
-  //     console.log(`Incoming request: `);
-  //     console.log(`method: ${req.method}`);
-  //     console.log(`payload: ${JSON.stringify(req.payload)}`);
-  //   });
+    ipc.on("ready", async _ => {
+      end = new Date();
+      console.log("IPC ready");
+      console.log(`Ready to use. Started in: ${end - start}ms`);
+      ipcReady = true;
 
-  ipc.on("request", async (req, res) => {
-    const processError = e => {
-      res.method = "error";
-      res.payload = e.message;
-      console.log(e);
-      return res.send();
-    };
+      if (sdkReady) {
+        await ipc.broadcast({method: "sdk state", payload: "ready"});
+      }
+      resolve(ipc);
+    });
 
-    if (req.method === "ping") {
-      res.method = "success";
-      res.payload = true;
-      return res.send();
-    }
-    if (req.method === "get sdk state") {
-      res.method = "success";
-      res.payload = sdkReady ? "ready" : "stop";
-      return res.send();
-    }
-    if (req.method === "reset") {
-      try {
-        await sdk.reset();
-        res.method = "success";
-        res.payload = null;
-        return res.send();
-      } catch (e) {
-        return processError(e);
-      }
-    }
-    if (req.method === "get description") {
-      try {
-        let result = await sdk.getDescription(req.payload);
-        res.method = "success";
-        res.payload = result;
-        return res.send();
-      } catch (e) {
-        return processError(e);
-      }
-    }
-    if (req.method === "get value") {
-      try {
-        let result = await sdk.getValue(req.payload);
-        res.method = "success";
-        res.payload = _formatDatapointValue(result);
-        return res.send();
-      } catch (e) {
-        return processError(e);
-      }
-    }
-    if (req.method === "get stored value") {
-      try {
-        let result = await sdk.getStoredValue(req.payload);
-        res.method = "success";
-        res.payload = _formatDatapointValue(result);
-        return res.send();
-      } catch (e) {
-        return processError(e);
-      }
-    }
-    if (req.method === "set value") {
-      try {
-        let result = await sdk.setValue(req.payload);
-        res.method = "success";
-        res.payload = _formatDatapointValue(result);
-        ipc.broadcast({ method: "datapoint value", payload: _formatDatapointValue(result) });
-        return res.send();
-      } catch (e) {
-        return processError(e);
-      }
-    }
-    if (req.method === "read value") {
-      try {
-        let result = await sdk.readValue(req.payload);
-        res.method = "success";
-        res.payload = result;
-        return res.send();
-      } catch (e) {
-        return processError(e);
-      }
-    }
-    if (req.method === "get server item") {
-      try {
-        let result = await sdk.getServerItem(req.payload);
-        res.method = "success";
-        res.payload = result;
-        return res.send();
-      } catch (e) {
-        return processError(e);
-      }
-    }
-    if (req.method === "set programming mode") {
-      try {
-        let result = await sdk.setProgrammingMode(req.payload);
-        res.method = "success";
-        res.payload = result;
-        return res.send();
-      } catch (e) {
-        return processError(e);
-      }
-    }
-    if (req.method === "get programming mode") {
-      try {
-        let result = await sdk.getProgrammingMode();
-        res.method = "success";
-        res.payload = result;
-        return res.send();
-      } catch (e) {
-        return processError(e);
-      }
-    }
-    if (req.method === "get parameter byte") {
-      try {
-        let result = await sdk.getParameterByte(req.payload);
-        res.method = "success";
-        res.payload = result;
-        return res.send();
-      } catch (e) {
-        return processError(e);
-      }
-    }
+    ipc.on("error", e => {
+      console.log(`Error with ipc: ${e.message}`);
+      ipcReady = false;
+    });
 
-    if (req.method === "poll values") {
-      try {
-        let result = await sdk.pollValues();
-        res.method = "success";
-        res.payload = result;
-        return res.send();
-      } catch (e) {
-        return processError(e);
-      }
-    }
+    // debugger
+    //   ipc.on("request", (req, res) => {
+    //     console.log(`Incoming request: `);
+    //     console.log(`method: ${req.method}`);
+    //     console.log(`payload: ${JSON.stringify(req.payload)}`);
+    //   });
 
-    return processError(new Error("Unknown method"));
+    ipc.on("request", async (req, res) => {
+      const processError = e => {
+        res.method = "error";
+        res.payload = e.message;
+        console.log(e);
+        return res.send();
+      };
+
+      if (req.method === "ping") {
+        res.method = "success";
+        res.payload = true;
+        return res.send();
+      }
+      if (req.method === "get sdk state") {
+        res.method = "success";
+        res.payload = sdkReady ? "ready" : "stop";
+        return res.send();
+      }
+      if (req.method === "reset") {
+        try {
+          await sdk.reset();
+          res.method = "success";
+          res.payload = null;
+          return res.send();
+        } catch (e) {
+          return processError(e);
+        }
+      }
+      if (req.method === "get description") {
+        try {
+          let result = await sdk.getDescription(req.payload);
+          res.method = "success";
+          res.payload = result;
+          return res.send();
+        } catch (e) {
+          return processError(e);
+        }
+      }
+      if (req.method === "get value") {
+        try {
+          let result = await sdk.getValue(req.payload);
+          res.method = "success";
+          res.payload = _formatDatapointValue(result);
+          return res.send();
+        } catch (e) {
+          return processError(e);
+        }
+      }
+      if (req.method === "get stored value") {
+        try {
+          let result = await sdk.getStoredValue(req.payload);
+          res.method = "success";
+          res.payload = _formatDatapointValue(result);
+          return res.send();
+        } catch (e) {
+          return processError(e);
+        }
+      }
+      if (req.method === "set value") {
+        try {
+          let result = await sdk.setValue(req.payload);
+          res.method = "success";
+          res.payload = _formatDatapointValue(result);
+          ipc.broadcast({method: "datapoint value", payload: _formatDatapointValue(result)});
+          return res.send();
+        } catch (e) {
+          return processError(e);
+        }
+      }
+      if (req.method === "read value") {
+        try {
+          let result = await sdk.readValue(req.payload);
+          res.method = "success";
+          res.payload = result;
+          return res.send();
+        } catch (e) {
+          return processError(e);
+        }
+      }
+      if (req.method === "get server item") {
+        try {
+          let result = await sdk.getServerItem(req.payload);
+          res.method = "success";
+          res.payload = result;
+          return res.send();
+        } catch (e) {
+          return processError(e);
+        }
+      }
+      if (req.method === "set programming mode") {
+        try {
+          let result = await sdk.setProgrammingMode(req.payload);
+          res.method = "success";
+          res.payload = result;
+          return res.send();
+        } catch (e) {
+          return processError(e);
+        }
+      }
+      if (req.method === "get programming mode") {
+        try {
+          let result = await sdk.getProgrammingMode();
+          res.method = "success";
+          res.payload = result;
+          return res.send();
+        } catch (e) {
+          return processError(e);
+        }
+      }
+      if (req.method === "get parameter byte") {
+        try {
+          let result = await sdk.getParameterByte(req.payload);
+          res.method = "success";
+          res.payload = result;
+          return res.send();
+        } catch (e) {
+          return processError(e);
+        }
+      }
+
+      if (req.method === "poll values") {
+        try {
+          let result = await sdk.pollValues();
+          res.method = "success";
+          res.payload = result;
+          return res.send();
+        } catch (e) {
+          return processError(e);
+        }
+      }
+
+      return processError(new Error("Unknown method"));
+    });
   });
 };
