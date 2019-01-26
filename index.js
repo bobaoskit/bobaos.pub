@@ -114,26 +114,6 @@ const initIPC = _ => {
         return res.send();
       };
 
-      if (req.method === "ping") {
-        res.method = "success";
-        res.payload = true;
-        return res.send();
-      }
-      if (req.method === "get sdk state") {
-        res.method = "success";
-        res.payload = sdkReady ? "ready" : "stop";
-        return res.send();
-      }
-      if (req.method === "reset") {
-        try {
-          await sdk.reset();
-          res.method = "success";
-          res.payload = null;
-          return res.send();
-        } catch (e) {
-          return processError(e);
-        }
-      }
       if (req.method === "get description") {
         try {
           let result = await sdk.getDescription(req.payload);
@@ -239,5 +219,37 @@ const initIPC = _ => {
 
       return processError(new Error("Unknown method"));
     });
+
+    // service requests
+    ipc.on("service request", async (req, res) => {
+      const processError = e => {
+        res.method = "error";
+        res.payload = e.message;
+        console.log(e);
+        return res.send();
+      };
+
+      if (req.method === "ping") {
+        res.method = "success";
+        res.payload = true;
+        return res.send();
+      }
+      if (req.method === "get sdk state") {
+        res.method = "success";
+        res.payload = sdkReady ? "ready" : "stop";
+        return res.send();
+      }
+      if (req.method === "reset") {
+        try {
+          await sdk.reset();
+          res.method = "success";
+          res.payload = null;
+          return res.send();
+        } catch (e) {
+          return processError(e);
+        }
+      }
+    });
+
   });
 };

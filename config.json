@@ -3,6 +3,7 @@
     "redis": "redis://127.0.0.1:6379",
     "key_prefix": "bobaos",
     "request_channel": "bobaos_req",
+    "service_channel": "bobaos_service",
     "broadcast_channel": "bobaos_bcast"
   },
   "sdk": {
