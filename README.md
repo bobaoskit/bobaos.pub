@@ -18,7 +18,11 @@ This module is an update for bdsd.sock.
 Bobaos.Pub uses [redis](https://redis.io/) and [bee-queue](https://www.npmjs.com/package/bee-queue) to accepts requests.
 
 1. It creates queue with name defined `config.json/ipc.request_channel`, by default it is `bobaos_req`.
-2. It broadcasts events like `datapoint value`, `server item`, `sdk status` over channel defined in `config.json`, by default it is `bobaos_bcast`.
+2. It creates queue with name defined `config.json/ipc.service_channel`, by default it is `bobaos_service`.
+3. It broadcasts events like `datapoint value`, `server item`, `sdk status` over channel defined in `config.json`, by default it is `bobaos_bcast`.
+
+Request queue serves common requests like `get datapoint value`, etc.
+Service queue serves requests `ping/get sdk state/reset`, so, if program stuck at datapoint method, it will be possible to reset sdk.
 
 ## Installation
 
