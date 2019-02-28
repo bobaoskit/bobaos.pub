@@ -16,5 +16,12 @@
         "stopBits": 1
       }
     }
+  },
+  "time_sync": {
+    "sync_enabled": true,
+    "redis_key": "bobaos:timestamp",
+    "check_enabled": true,
+    "sync_interval": 1000,
+    "max_check_difference": 30000
   }
 }
