@@ -242,6 +242,7 @@ const initIPC = _ => {
       if (req.method === "reset") {
         try {
           await sdk.reset();
+          await ipc.reset();
           res.method = "success";
           res.payload = null;
           return res.send();
