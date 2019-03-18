@@ -21,7 +21,7 @@
   "author": "Vladimir Shabunin",
   "license": "ISC",
   "dependencies": {
-    "bobaos": "2.0.11",
+    "bobaos": "2.0.12",
     "bee-queue": "^1.2.2",
     "knx-dpts-baos": "^1.0.0",
     "redis": "^2.8.0"
