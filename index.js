@@ -31,6 +31,12 @@ sdk.on("ready", async _ => {
   await onSdkReady();
 });
 
+// when reset request is received from BAOS
+// call ipc reset method to emit last job again
+sdk.on("reset", _ => {
+  ipc.reset();
+});
+
 let onSdkStop = async _ => {
   sdkReady = false;
   if (ipcReady) {
