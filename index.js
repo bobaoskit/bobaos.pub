@@ -216,7 +216,7 @@ const initIPC = _ => {
         try {
           let result = await sdk.pollValues();
           res.method = "success";
-          res.payload = result;
+          res.payload = _formatDatapointValue(result);
           return res.send();
         } catch (e) {
           return processError(e);
