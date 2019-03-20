@@ -5,6 +5,15 @@ const config = require("./config");
 
 // init logger
 
+const banner = `
+  ()--()     hello, friend
+    \\"/_     here comes bobaos
+     \'  )    learn and enjoy
+       ~
+      `;
+
+console.log(banner);
+
 let start, end;
 start = new Date();
 console.log(start);
@@ -257,6 +266,5 @@ const initIPC = _ => {
         }
       }
     });
-
   });
 };

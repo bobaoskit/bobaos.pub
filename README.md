@@ -104,3 +104,10 @@ In case of error, `method` field in response will contain "error" string and pay
 ## Client libraries
 
 To write nodejs applications use [bobaos.sub](https://github.com/bobaoskit/bobaos.sub) client library.
+
+## Credits
+
+* To people working on KNX standard
+* To Weinzierl team for great API
+* To all open source community
+* To jgs for [mouse art](https://www.asciiart.eu/animals/rodents/mice)
