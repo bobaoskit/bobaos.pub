@@ -3,8 +3,6 @@ const IPC = require("./lib/ipc");
 
 const config = require("./config");
 
-// init logger
-
 const banner = `
   ()--()     hello, friend
     \\"/_     here comes bobaos
@@ -26,7 +24,7 @@ let sdk = BobaosSdk();
 let sdkReady = false;
 
 let onSdkReady = async _ => {
-  console.log("sdk ready");
+  console.log("Datapoint SDK ready.");
 
   sdkReady = true;
   if (ipcReady) {
@@ -36,7 +34,6 @@ let onSdkReady = async _ => {
   }
 };
 sdk.on("ready", async _ => {
-  console.log("Connected to BAOS. SDK ready.");
   await onSdkReady();
 });
 
@@ -72,12 +69,8 @@ sdk.on("server item", async payload => {
 });
 
 // format result.
-// JSON.stringify(Buffer) returns {type: Buffer, value: []}
-// but we want just array of bytes instead
 const _formatDatapointValue = payload => {
   const _formatSingleValue = data => {
-    // let rawBuff = Buffer.from(data.raw, "base64");
-    // raw is base64 encoded
     return {
       id: data.id,
       value: data.value,
@@ -114,7 +107,7 @@ const initIPC = _ => {
       ipcReady = false;
     });
 
-    // debugger
+    // request debugger
     //   ipc.on("request", (req, res) => {
     //     console.log(`Incoming request: `);
     //     console.log(`method: ${req.method}`);
