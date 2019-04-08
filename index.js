@@ -97,7 +97,7 @@ const initIPC = _ => {
       ipcReady = true;
 
       if (sdkReady) {
-        await ipc.broadcast({method: "sdk state", payload: "ready"});
+        await ipc.broadcast({ method: "sdk state", payload: "ready" });
       }
       resolve(ipc);
     });
@@ -157,7 +157,7 @@ const initIPC = _ => {
           let result = await sdk.setValue(req.payload);
           res.method = "success";
           res.payload = _formatDatapointValue(result);
-          ipc.broadcast({method: "datapoint value", payload: _formatDatapointValue(result)});
+          ipc.broadcast({ method: "datapoint value", payload: _formatDatapointValue(result) });
           return res.send();
         } catch (e) {
           return processError(e);
