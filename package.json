@@ -1,6 +1,6 @@
 {
   "name": "bobaos.pub",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "Bobaos SDK over Redis and BeeQueue",
   "main": "index.js",
   "bin": {
