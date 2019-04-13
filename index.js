@@ -258,6 +258,8 @@ const initIPC = _ => {
           return processError(e);
         }
       }
+
+      return processError(new Error("Unknown method"));
     });
   });
 };
