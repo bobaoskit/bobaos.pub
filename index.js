@@ -1,6 +1,7 @@
 const BobaosSdk = require("./lib/bobaosSdk");
 const IPC = require("./lib/ipc");
 
+const pjson = require("./package.json");
 const config = require("./config");
 
 const banner = `
@@ -253,6 +254,25 @@ const initIPC = _ => {
           await ipc.reset();
           res.method = "success";
           res.payload = null;
+          return res.send();
+        } catch (e) {
+          return processError(e);
+        }
+      }
+      if (req.method === "get banner") {
+        try {
+          res.method = "success";
+          res.payload = banner;
+          return res.send();
+        } catch (e) {
+          return processError(e);
+        }
+      }
+
+      if (req.method === "get version") {
+        try {
+          res.method = "success";
+          res.payload = pjson.version;
           return res.send();
         } catch (e) {
           return processError(e);
