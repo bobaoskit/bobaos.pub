@@ -125,11 +125,17 @@ If bobaos.pub service is running, true will be returned as a response payload.
 
 **payload**: null
 
-Response payload: "ready"/"stopped"
+Response payload: "ready"/"stopped".
 
 #### reset
 
 **payload**: null
+
+#### get version
+
+**payload**: null
+
+Get version of bobaos.pub npm package.
 
 ### baos methods
 
