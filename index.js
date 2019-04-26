@@ -158,7 +158,7 @@ const initIPC = _ => {
           let result = await sdk.setValue(req.payload);
           res.method = "success";
           res.payload = _formatDatapointValue(result);
-          ipc.broadcast({ method: "datapoint value", payload: _formatDatapointValue(result) });
+          ipc.broadcast({ method: "datapoint value", payload: res.payload });
           return res.send();
         } catch (e) {
           return processError(e);
