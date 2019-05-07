@@ -1,21 +1,26 @@
-const BobaosSdk = require("./lib/bobaosSdk");
-const IPC = require("./lib/ipc");
-
-const pjson = require("./package.json");
-const config = require("./config");
-
 const banner = `
   ()--()     hello, friend
     \\"/_     here comes bobaos
-     \'  )    learn and enjoy
+     '  )    learn and enjoy
        ~
       `;
 
 console.log(banner);
 
+const config = require("./config.js");
+const BobaosSdk = require("./lib/bobaosSdk");
+const IPC = require("./lib/ipc");
+
+const pjson = require("./package.json");
+
 let start, end;
 start = new Date();
-console.log(start);
+console.log(
+  `${start
+    .toISOString()
+    .replace(/T/, " ")
+    .replace(/\..+/, "")} [UTC]`
+);
 console.log("Starting bobaos.pub.");
 
 let ipc;
