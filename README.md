@@ -42,6 +42,9 @@ sudo systemctl start redis.service
 sudo npm i -g bobaos.pub --unsafe-perm
 ```
 3. Configure serialport, write your device (`/dev/ttyS*` or `/dev/ttyAMA0` for RPi) to `/usr/lib/node_modules/bobaos.pub/config.json`.
+
+Since version `bobaos.pub@2.0.10` config file `~/.config/bobaos/pub.service` is used as an overriding config file. So, after first run, you will be able to modify settings from there.
+
 4. Create service file for systemd `/etc/systemd/system/bobaos_pub.service`:
 
 ```
