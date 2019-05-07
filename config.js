@@ -16,7 +16,14 @@ try {
 } catch (e) {
   if (e.code === "ENOENT") {
     console.log("User config file does not exist");
-    fs.mkdirSync(cfgdir, { recursive: true });
+    // try to create dir, if exist, ignore
+    try {
+      fs.mkdirSync(cfgdir, { recursive: true });
+    } catch (e) {
+      if (e.code !== "EEXIST") {
+        throw e;
+      }
+    }
 
     // write default config
     const configString = JSON.stringify(config, null, 2);
