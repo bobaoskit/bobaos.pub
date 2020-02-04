@@ -169,6 +169,28 @@ const initIPC = _ => {
           return processError(e);
         }
       }
+      if (req.method === "put value") {
+        try {
+          let result = await sdk.putValue(req.payload);
+          res.method = "success";
+          res.payload = _formatDatapointValue(result);
+          ipc.broadcast({ method: "datapoint value", payload: res.payload });
+          return res.send();
+        } catch (e) {
+          return processError(e);
+        }
+      }
+      if (req.method === "send value") {
+        try {
+          let result = await sdk.sendValue(req.payload);
+          res.method = "success";
+          res.payload = _formatDatapointValue(result);
+          ipc.broadcast({ method: "datapoint value", payload: res.payload });
+          return res.send();
+        } catch (e) {
+          return processError(e);
+        }
+      }
       if (req.method === "read value") {
         try {
           let result = await sdk.readValue(req.payload);
