@@ -180,20 +180,19 @@ const initIPC = _ => {
           return processError(e);
         }
       }
-      if (req.method === "send value") {
+      if (req.method === "read value") {
         try {
-          let result = await sdk.sendValue(req.payload);
+          let result = await sdk.readValue(req.payload);
           res.method = "success";
-          res.payload = _formatDatapointValue(result);
-          ipc.broadcast({ method: "datapoint value", payload: res.payload });
+          res.payload = result;
           return res.send();
         } catch (e) {
           return processError(e);
         }
       }
-      if (req.method === "read value") {
+      if (req.method === "get description string") {
         try {
-          let result = await sdk.readValue(req.payload);
+          let result = await sdk.getDescriptionString(req.payload);
           res.method = "success";
           res.payload = result;
           return res.send();
